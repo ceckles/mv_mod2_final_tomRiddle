@@ -19,7 +19,10 @@ app.use(express.json());
 
 const config = {
   authRequired: false,
-  auth0Logout: true
+  auth0Logout: true,
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
+  secret: process.env.SECRET
 };
 
 const port = process.env.PORT || 3000;
@@ -27,10 +30,7 @@ if (!config.baseURL && !process.env.BASE_URL && process.env.PORT && process.env.
   config.baseURL = `http://localhost:${port}`;
 }
 
-//Paths
 app.use(auth(config));
-app.use('/', router);
-
 
 // Middleware to make the `user` object available for all views
 app.use(function (req, res, next) {
@@ -38,12 +38,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-//profle path
-const { requiresAuth } = require('express-openid-connect');
-app.get('/profile', requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
-});
-
+app.use('/', router);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -61,8 +56,6 @@ app.use(function (err, req, res, next) {
   });
 });
 
-
-//Start server and listen to port
 http.createServer(app)
   .listen(port, () => {
     console.log(`Listening on ${config.baseURL}`);
