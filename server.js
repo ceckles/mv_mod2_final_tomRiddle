@@ -3,18 +3,18 @@ const basicAuth = require('express-basic-auth');
 const bcrypt = require('bcrypt');
 const {User, Entry} = require('./models');
 const seed = require('./seed');
-const { restart } = require("nodemon");
+const { restart } = require("nodemon"); //idk what this is?
 
 // initialise Express
 const app = express();
 
 // specify out request bodies are json
 app.use(express.json());
-//DB Seed
+
+//DB Seed comment out to not reseed on restart
 seed();
 
 
-//DB Seed
 //basic auth needs a config object
 app.use(basicAuth({
   authorizer : dbAuthorizer, //custom authorizer fn
@@ -42,7 +42,6 @@ async function dbAuthorizer(username, password, callback){
 app.get('/diaries', async (req, res) => {
   //Get user from auth header
   const userName = req.auth.user;
-  //console.log(userName)
   //Get User instance from DB
   const usr = await User.findOne({ where: { name: userName } });
 
@@ -55,6 +54,7 @@ app.get('/diaries', async (req, res) => {
     console.log("USER instance :", usr instanceof User); // true
     console.log("USER Name: ", usr.name); // 'My Title'
   }
+
   //Get User Entries from DB
   const entry = await Entry.findAll({where: { UserId: usr.id}})
 
@@ -64,7 +64,7 @@ app.get('/diaries', async (req, res) => {
 
 // Delete Entry 
 app.delete('/entry/:id', async(req, res) => {
-  //Check use can delete entry and belong to them
+  //Check use can delete entry and it belongs to them
   const userName = req.auth.user;
   //Get User instance from DB
   const usr = await User.findOne({ where: { name: userName } })
@@ -74,11 +74,12 @@ app.delete('/entry/:id', async(req, res) => {
 
   if(entry.UserId == usr.id){
     await Entry.destroy({where: {id: req.params.id}})
+    res.json({Delted: entry })
+    res.status = 200;
   }else{
+    res.json({Error: "User Not allowed to delete entry"})
     res.status = 401
   }
-  res.send('Deleted Entry')
-  res.status = 200;
 })
 
 // Post New Entry 
@@ -97,8 +98,8 @@ app.delete('/user/:id', async (req, res) => {
 })
 
  app.put('/entry/:id', async (req, res) => {
-   let updateedEntry = await Entry.update(req.body, {where: {id: req.params.id}})
-   res.json({updateedEntry})
+   let updatedEntry = await Entry.update(req.body, {where: {id: req.params.id}})
+   res.json({updatedEntry})
  })
 
 //Start server and Listen on Port
