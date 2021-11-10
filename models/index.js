@@ -16,7 +16,8 @@ User.init({
 
 
 Entry.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    body: DataTypes.STRING
 }, {
     sequelize,
     timestamps: false,

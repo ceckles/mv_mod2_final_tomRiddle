@@ -1,24 +1,29 @@
 {
-    "users": [
-      { 
-        "name": "Tom",
-        "password": "$2b$04$AfKJl6Z8XY3QnYOKhNLnoeMK1luxF7i3dtrG7BTX8dklPcvE9RIzi"
-      },
-      {
-        "name": "Potter",
-        "password": "$2b$04$eUulG3/U37eJ7mUh/e3ELu1va1lCq7oc2RMyTMytQiyGQs3fS4MDy"
-      }
-    ],
-    "entries": [
-      {
-        "name": "Lost & Found",
-        "body": " SOME INFO HERE",
-        "UserId": 1
-      },
-      {
-        "name": "Hidden Cloak",
-        "body": "I'm a wizard",
-        "UserId": 2
-      }
-    ]
-  }
+  "users": [
+    { 
+      "name": "Tom",
+      "password": "$2b$04$AfKJl6Z8XY3QnYOKhNLnoeMK1luxF7i3dtrG7BTX8dklPcvE9RIzi"
+    },
+    {
+      "name": "Potter",
+      "password": "$2b$04$eUulG3/U37eJ7mUh/e3ELu1va1lCq7oc2RMyTMytQiyGQs3fS4MDy"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Lost & Found",
+      "body": "This diary holds memories of terrible things. Things that were covered up. Things that happened at Hogwarts School of Witchcraft and Wizardry",
+      "UserId": 1
+    },
+    {
+      "name": "Ginny Weasley",
+      "body": "I've found a new friend to play with her name is Ginny Weasley",
+      "UserId": 1
+    },
+    {
+      "name": "Hidden Cloak",
+      "body": "I'm a wizard",
+      "UserId": 2
+    }
+  ]
+}
