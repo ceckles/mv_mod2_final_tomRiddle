@@ -1,15 +1,17 @@
 const path = require('path');
 const fs = require('fs').promises;
 const {sequelize} = require('./db');
-const {User,Diary} = require('./models');
+const {User,Diary} = require('./models/diary');
+const bcrypt = require('bcrypt');
+
 
 const createUsers = async () => {
 
     let pw1 = await bcrypt.hash('1234', 2);
-    let pw2 = await bcrypt.hash('12377', 2);
+    let pw2 = await bcrypt.hash('5237', 2);
     let pw3 = await bcrypt.hash('6543', 2);
     let pw4 = await bcrypt.hash('3445', 2);
-    let pw5 = await bcrypt.hash('31344', 2);
+    let pw5 = await bcrypt.hash('5134', 2);
 
     const users = [
         {name : 'Tom', password: pw1 },

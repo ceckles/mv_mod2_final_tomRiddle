@@ -1,73 +1,13 @@
-// const dotenv = require('dotenv');
-// const express = require('express');
-// const http = require('http');
-// const logger = require('morgan');
-// const path = require('path');
-// const router = require('./routes/index');
-// const { auth } = require('express-openid-connect');
-
 const express = require('express');
 const path = require('path');
 const basicAuth = require('express-basic-auth');
 const bcrypt = require('bcrypt');
-const {User,Diary} = require('./models');
-
-
-
-dotenv.load();
-
+const {User,Diary} = require('./models/diary');
+// initialise Express
 const app = express();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+// specify out request bodies are json
 app.use(express.json());
-
-const config = {
-  authRequired: false,
-  auth0Logout: true
-};
-
-const port = process.env.PORT || 3000;
-if (!config.baseURL && !process.env.BASE_URL && process.env.PORT && process.env.NODE_ENV !== 'production') {
-  config.baseURL = `http://localhost:${port}`;
-}
-
-//Paths
-app.use(auth(config));
-app.use('/', router);
-
-
-// Middleware to make the `user` object available for all views
-app.use(function (req, res, next) {
-  res.locals.user = req.oidc.user;
-  next();
-});
-
-//profle path
-const { requiresAuth } = require('express-openid-connect');
-app.get('/profile', requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
-});
-
-
-// Catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// Error handlers
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: process.env.NODE_ENV !== 'production' ? err : {}
-  });
-});
 
 /*========Basic OAuth================*/
 //basic auth needs a config object
@@ -92,22 +32,25 @@ async function dbAuthorizer(username, password, callback){
   }
 }
 
-/*============ROUTES ===========================*/
+/*============ROUTES FOR USER===========================*/
 app.get('/', (req, res) => {
   res.send('<h1>Tom Riddle Diary!!!!</h1>')
 })
 
+//get all users
 app.get('/users', async (req, res) => {
   //what should i put here?
   let users = await User.findAll()
   res.json({users});
 })
 
+//get one user
 app.get('/users/:id', async (req, res) => {
   let user = await User.findByPk(req.params.id);
   res.json({user});
 })
 
+/*============ROUTES FOR DIARY===========================*/
 //read or get all diary entries
 app.get('/diaries', async (req, res) => {
   let diaries = await Diary.findAll()
@@ -146,9 +89,3 @@ app.delete('/diaries/:id', async(req, res)=> {
 app.listen(8000, () => {
   console.log("Server running on port 8000");
 });
-
-//Start server and listen to port
-http.createServer(app)
-  .listen(port, () => {
-    console.log(`Listening on ${config.baseURL}`);
-  });

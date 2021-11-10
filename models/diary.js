@@ -22,4 +22,4 @@ Diary.init({
     timestamps: false,
 });
 
-module.exports = {Diary,User};
+module.exports = {User,Diary};
