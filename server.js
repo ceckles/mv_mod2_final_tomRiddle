@@ -36,12 +36,26 @@ async function dbAuthorizer(username, password, callback){
   }
 }
 
-/*============ROUTES FOR DIARY===========================*/
+/*===========================ROUTES FOR DIARY===========================*/
 //read or get all diary entries
 app.get('/diaries', async (req, res) => {
-  console.log("RES: ", res)
-  console.log("REQ: ", req)
-  let entry = await Entry.findAll()
+  //Get user from auth header
+  const userName = req.auth.user;
+  console.log(userName)
+  //Get User instance from DB
+  const usr = await User.findOne({ where: { name: userName } });
+  if (usr === null) {
+    console.log('Not found!');
+    res.json({error: "No User Found"})
+    res.status = 404;
+  } else {
+    console.log("USER instance :", usr instanceof User); // true
+    console.log("USER Name: ", usr.name); // 'My Title'
+  }
+  //Get User Entries from DB
+  const entry = await Entry.findAll({where: { UserId: usr.id}})
+
+  //let entry = await Entry.findAll();
   res.json({entry});
   res.status = 200;
 })
