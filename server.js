@@ -1,72 +1,51 @@
-const dotenv = require('dotenv');
-const express = require('express');
-const http = require('http');
-const logger = require('morgan');
-const path = require('path');
-const router = require('./routes/index');
-const { auth } = require('express-openid-connect');
+const express = require("express");
+const basicAuth = require('express-basic-auth');
+const bcrypt = require('bcrypt');
+const {User, Entry} = require('./models');
+const seed = require('./seed')
 
-dotenv.load();
-
+// initialise Express
 const app = express();
 
-// Set Views 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
-
+// specify out request bodies are json
 app.use(express.json());
+//DB Seed
+seed();
 
 
+//DB Seed
+//basic auth needs a config object
+app.use(basicAuth({
+  authorizer : dbAuthorizer, //custom authorizer fn
+  authorizeAsync: true, //allow our authorizer to be async
+  unauthorizedResponse : () => 'You are not a Wizard!'
+}))
 
-
-
-
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  clientID: process.env.CLIENT_ID,
-  issuerBaseURL: process.env.ISSUER_BASE_URL,
-  secret: process.env.SECRET
-};
-
-const port = process.env.PORT || 3000;
-if (!config.baseURL && !process.env.BASE_URL && process.env.PORT && process.env.NODE_ENV !== 'production') {
-  config.baseURL = `http://localhost:${port}`;
+//compares username + password with what's in the database
+// Returns boolean indicating if password matches
+async function dbAuthorizer(username, password, callback){
+  try {
+    // get user from DB
+    const user = await User.findOne({where : {name : username}})
+    // isValid == true if user exists and passwords match, false if no user or passwords don't match
+    let isValid = (user != null) ? await bcrypt.compare(password, user.password) : false;
+    callback(null, isValid); //callback expects null as first argument
+  } catch(err) {
+    console.log("OH NO AN ERROR!", err)
+    callback(null, false);
+  }
 }
 
-app.use(auth(config));
+/*============ROUTES FOR DIARY===========================*/
+//read or get all diary entries
+app.get('/diaries', async (req, res) => {
+  console.log("RES: ", res)
+  console.log("REQ: ", req)
+  let entry = await Entry.findAll()
+  res.json({entry});
+  res.status = 200;
+})
 
-
-
-// Middleware to make the `user` object available for all views
-app.use(function (req, res, next) {
-  res.locals.user = req.oidc.user;
-  console.log("USER INFO", req.oidc.user)
-  next();
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
-
-app.use('/', router);
-
-// Catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// Error handlers
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: process.env.NODE_ENV !== 'production' ? err : {}
-  });
-});
-
-http.createServer(app)
-  .listen(port, () => {
-    console.log(`Listening on ${config.baseURL}`);
-  });

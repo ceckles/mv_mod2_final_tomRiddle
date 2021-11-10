@@ -1,14 +1,22 @@
 {
-  "name": "auth0-express-webapp-sample",
-  "scripts": {},
+  "name": "Tom Riddle Diary",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "seed": "node seed.js"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "debug": "~2.6.9",
-    "dotenv": "^6.1.0",
-    "ejs": "^2.7.4",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-oauth2-jwt-bearer": "^1.0.1",
-    "express-openid-connect": "^2.0.0",
-    "http-errors": "~1.6.2",
-    "morgan": "~1.9.0"
+    "express-basic-auth": "^1.2.0",
+    "nodemon": "^2.0.13",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^4.2.0"
   }
 }

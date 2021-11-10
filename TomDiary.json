@@ -1,0 +1,24 @@
+{
+    "users": [
+      { 
+        "name": "Tom",
+        "password": "$2b$04$AfKJl6Z8XY3QnYOKhNLnoeMK1luxF7i3dtrG7BTX8dklPcvE9RIzi"
+      },
+      {
+        "name": "Potter",
+        "password": "$2b$04$eUulG3/U37eJ7mUh/e3ELu1va1lCq7oc2RMyTMytQiyGQs3fS4MDy"
+      }
+    ],
+    "entries": [
+      {
+        "name": "Lost & Found",
+        "body": " SOME INFO HERE",
+        "UserId": 1
+      },
+      {
+        "name": "Hidden Cloak",
+        "body": "I'm a wizard",
+        "UserId": 2
+      }
+    ]
+  }
