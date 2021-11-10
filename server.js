@@ -10,12 +10,19 @@ dotenv.load();
 
 const app = express();
 
+// Set Views 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json());
+
+
+
+
+
 
 const config = {
   authRequired: false,
@@ -31,6 +38,8 @@ if (!config.baseURL && !process.env.BASE_URL && process.env.PORT && process.env.
 }
 
 app.use(auth(config));
+
+
 
 // Middleware to make the `user` object available for all views
 app.use(function (req, res, next) {
