@@ -41,7 +41,7 @@ async function dbAuthorizer(username, password, callback){
 app.get('/diaries', async (req, res) => {
   //Get user from auth header
   const userName = req.auth.user;
-  console.log(userName)
+  //console.log(userName)
   //Get User instance from DB
   const usr = await User.findOne({ where: { name: userName } });
   if (usr === null) {

@@ -12,7 +12,12 @@
     "entries": [
       {
         "name": "Lost & Found",
-        "body": " SOME INFO HERE",
+        "body": "This diary holds memories of terrible things. Things that were covered up. Things that happened at Hogwarts School of Witchcraft and Wizardry",
+        "UserId": 1
+      },
+      {
+        "name": "Ginny Weasley",
+        "body": "I've found a new friend to play with her name is Ginny Weasley",
         "UserId": 1
       },
       {
