@@ -60,6 +60,31 @@ app.get('/diaries', async (req, res) => {
   res.status = 200;
 })
 
+// Delete Entry 
+app.delete('/entry/:id', async(req, res) => {
+  await Entry.destroy({where: {id: req.params.id}})
+  res.send('Deleted Entery')
+})
+
+// Post New Entry 
+app.post('entry', async(req, res) => {
+  let newEntry = await Entry.create(req.body)
+  res.json({newEntry})
+})
+// Delete User by ID
+app.delete('/user/:id', async (req, res) => {
+  await User.destroy({where:{id: req.params.id}})
+  res.send('Deleted')
+})
+ app.post('/user', async (req, res) => {
+   let newUSer = await User.create(req,body)
+   res.json(newUSer)
+})
+
+ app.put('/entry/:id', async (req, res) => {
+   let updateedEntry = await Entry.update(req.body, {where: {id: req.params.id}})
+   res.json({updateedEntry})
+ })
 
 //Start server and Listen on Port
 let port = process.env.PORT || 3000
