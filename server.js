@@ -2,7 +2,8 @@ const express = require("express");
 const basicAuth = require('express-basic-auth');
 const bcrypt = require('bcrypt');
 const {User, Entry} = require('./models');
-const seed = require('./seed')
+const seed = require('./seed');
+const { restart } = require("nodemon");
 
 // initialise Express
 const app = express();
@@ -44,6 +45,8 @@ app.get('/diaries', async (req, res) => {
   //console.log(userName)
   //Get User instance from DB
   const usr = await User.findOne({ where: { name: userName } });
+
+  //Checking User stuff 
   if (usr === null) {
     console.log('Not found!');
     res.json({error: "No User Found"})
@@ -55,15 +58,27 @@ app.get('/diaries', async (req, res) => {
   //Get User Entries from DB
   const entry = await Entry.findAll({where: { UserId: usr.id}})
 
-  //let entry = await Entry.findAll();
   res.json({entry});
   res.status = 200;
 })
 
 // Delete Entry 
 app.delete('/entry/:id', async(req, res) => {
-  await Entry.destroy({where: {id: req.params.id}})
-  res.send('Deleted Entery')
+  //Check use can delete entry and belong to them
+  const userName = req.auth.user;
+  //Get User instance from DB
+  const usr = await User.findOne({ where: { name: userName } })
+  //console.log("USER: ", usr.id);
+  const entry = await Entry.findByPk(req.params.id)
+  //console.log("ENTRY: ", entry.UserId)
+
+  if(entry.UserId == usr.id){
+    await Entry.destroy({where: {id: req.params.id}})
+  }else{
+    res.status = 401
+  }
+  res.send('Deleted Entry')
+  res.status = 200;
 })
 
 // Post New Entry 
