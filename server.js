@@ -5,6 +5,7 @@ const logger = require('morgan');
 const path = require('path');
 const router = require('./routes/index');
 const { auth } = require('express-openid-connect');
+const Diary = require('./models/diary.js');
 
 dotenv.load();
 
@@ -61,6 +62,49 @@ app.use(function (err, req, res, next) {
   });
 });
 
+/*============ROUTES ===========================*/
+app.get('/', (req, res) => {
+  res.send('<h1>Tom Riddle Diary!!!!</h1>')
+})
+
+//read or get all diary entries
+app.get('/diaries', async (req, res) => {
+  let diaries = await Diary.findAll()
+  res.json({diaries});
+})
+
+//read one diary entry
+app.get('/diaries/:id', async (req, res) => {
+  let diary = await Diary.findByPk(req.params.id);
+  res.json({diary});
+})
+
+//create one diary entry
+
+app.post('/diaries', async(req, res)=> {
+  let newDiaryEntry = await Diary.create(req.body);
+  res.json({newDiaryEntry})
+})
+
+// update one diary entry
+
+app.put('/diaries/:id', async(req, res)=> {
+  let updatedDiary = await Diary.update(req.body, {
+    where : {id : req.params.id}
+  });
+  res.json({updatedDiary})
+})
+
+ //delete one diary entry 
+
+app.delete('/diaries/:id', async(req, res)=> {
+  await Diary.destroy({where: {id: req.params.id}});
+  res.send('Diary Entry Deleted!')
+})
+
+app.listen(8000, () => {
+  console.log("Server running on port 8000");
+});
 
 //Start server and listen to port
 http.createServer(app)
