@@ -60,6 +60,9 @@ app.get('/diaries', async (req, res) => {
   res.status = 200;
 })
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+
+//Start server and Listen on Port
+let port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log("Server running on port:", port);
 });
