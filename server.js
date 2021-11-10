@@ -1,11 +1,18 @@
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
+// const express = require('express');
+// const http = require('http');
+// const logger = require('morgan');
+// const path = require('path');
+// const router = require('./routes/index');
+// const { auth } = require('express-openid-connect');
+
 const express = require('express');
-const http = require('http');
-const logger = require('morgan');
 const path = require('path');
-const router = require('./routes/index');
-const { auth } = require('express-openid-connect');
-const Diary = require('./models/diary.js');
+const basicAuth = require('express-basic-auth');
+const bcrypt = require('bcrypt');
+const {User,Diary} = require('./models');
+
+
 
 dotenv.load();
 
@@ -62,9 +69,43 @@ app.use(function (err, req, res, next) {
   });
 });
 
+/*========Basic OAuth================*/
+//basic auth needs a config object
+app.use(basicAuth({
+  authorizer : dbAuthorizer, //custom authorizer fn
+  authorizeAsync: true, //allow our authorizer to be async
+  unauthorizedResponse : () => 'None shall pass!'
+}))
+
+//compares username + password with what's in the database
+// Returns boolean indicating if password matches
+async function dbAuthorizer(username, password, callback){
+  try {
+    // get user from DB
+    const user = await User.findOne({where : {name : username}})
+    // isValid == true if user exists and passwords match, false if no user or passwords don't match
+    let isValid = (user != null) ? await bcrypt.compare(password, user.password) : false;
+    callback(null, isValid); //callback expects null as first argument
+  } catch(err) {
+    console.log("OH NO AN ERROR!", err)
+    callback(null, false);
+  }
+}
+
 /*============ROUTES ===========================*/
 app.get('/', (req, res) => {
   res.send('<h1>Tom Riddle Diary!!!!</h1>')
+})
+
+app.get('/users', async (req, res) => {
+  //what should i put here?
+  let users = await User.findAll()
+  res.json({users});
+})
+
+app.get('/users/:id', async (req, res) => {
+  let user = await User.findByPk(req.params.id);
+  res.json({user});
 })
 
 //read or get all diary entries
