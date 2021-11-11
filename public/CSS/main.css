@@ -49,5 +49,37 @@ h1{
       animation: fadeIn 2s infinite alternate;
   }
 
+/* Login Form */
+
+.box {
+  width: 300px;
+  height: 100px;
+  padding: 25px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background-color: rgb(155, 134, 59);
+  text-align: center;
+}
+
+.box input[type="text"], .box input[type="password"]
+{
+border: 0;
+background: none;
+display: block;
+text-align: center;
+border: 3px solid;
+padding: 5px 3px;
+outline: none;
+border-radius: 24px;
+transition: 0.25;
+}
+
+.box input[type="submit"]{
+  background: none;
+  padding: 7px 15px;
+}
+
 
 
