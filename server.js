@@ -74,12 +74,24 @@ app.get("/entry", async (req, res) => {
   res.json({ entry });
   res.status = 200;
 });
+
 //TODO: Need to add check and db gets
 app.get("/entry/:id", async (req, res) => {
- 
-  res.json({ STATUS: "PENDING"});
-  res.status = 200;
+   //Get user from auth header
+   const userName = req.auth.user;
+   //Get User instance from DB
+   const usr = await User.findOne({ where: { name: userName } });
+  //Get User Entries from DB
+  const entry = await Entry.findByPk(req.params.id)
+  if(usr.id == entry.id){
+    res.json(entry)
+    res.status = 200
+  }else{
+    res.json({Error: "Not an entry you are allow to access"})
+    res.status = 403
+  }
 });
+
 // Delete Entry
 app.delete("/entry/:id", async (req, res) => {
   //Check use can delete entry and it belongs to them
@@ -148,11 +160,11 @@ app.delete("/user/:id", async (req, res) => {
   await User.destroy({ where: { id: req.params.id } });
   res.send("Deleted");
 });
-app.post("/user", async (req, res) => {
-  let newUSer = await User.create(req, body);
-  res.json(newUSer);
-});
 
+app.post("/user", async (req, res) => {
+  let newUser = await User.create(req, body);
+  res.json(newUser);
+});
 
 
 //Start server and Listen on Port
