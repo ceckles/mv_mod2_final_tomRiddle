@@ -24,6 +24,41 @@
         "name": "Hidden Cloak",
         "body": "I'm a wizard",
         "UserId": 2
+      },
+      {
+        "name": "Pity",
+        "body": "Do not pity the dead, Harry. Pity the living, and, above all those who live without love.",
+        "UserId": 1
+      },
+      {
+        "name": "Love is Powerful",
+        "body": "Love as powerful as your mother’s for you leaves it’s own mark. To have been loved so deeply, even though the person who loved us is gone, will give us some protection forever.",
+        "UserId": 1
+      },
+      {
+        "name": "Never be Ashamed",
+        "body": "I am what I am, an’ I’m not ashamed. ‘Never be ashamed,’ my ol’ dad used ter say, ‘there’s some who’ll hold it against you, but they’re not worth botherin’ with.",
+        "UserId": 1
+      },
+      {
+        "name": "Unknown Fear",
+        "body": "It is the unknown we fear when we look upon death and darkness, nothing more.",
+        "UserId": 1
+      },
+      {
+        "name": "Do the Dead Leave Us?",
+        "body": "You think the dead we loved ever truly leave us? You think that we don’t recall them more clearly than ever in times of great trouble?",
+        "UserId": 1
+      },
+      {
+        "name": "Who we really are",
+        "body": "We’ve all got both light and dark inside us. What matters is the part we choose to act on. That’s who we really are.",
+        "UserId": 1
+      },
+      {
+        "name": "What a Man is Truely Like",
+        "body": "If you want to know what a man’s like, take a good look at how he treats his inferiors, not his equals.",
+        "UserId": 1
       }
     ]
   }
