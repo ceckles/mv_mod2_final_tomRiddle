@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { User, Entry } = require("./models");
 const seed = require("./seed");
 const { restart } = require("nodemon"); //idk what this is?
+// const { json } = require("sequelize/types");
 
 // initialise Express
 const app = express();
@@ -13,10 +14,24 @@ app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))
 app.use('/js', express.static(__dirname + 'public/js'))
 app.use('/img', express.static(__dirname + 'public/img'))
+app.use(express.urlencoded({ extended: false}))
+
+app.set('view-engine', 'ejs')
 
 app.get('', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')
+  res.render('index.ejs')
+}) 
+
+app.get('/login', (req, res) => {
+  res.render('login.ejs')
 })
+
+
+app.get('/signup', (req, res) => {
+  res.render('signup.ejs')
+
+})
+
 
 
 // specify out request bodies are json
@@ -25,12 +40,12 @@ app.use(express.json());
 //DB Seed comment out to not reseed on restart
 seed();
 
-//basic auth needs a config object
+// basic auth needs a config object
 app.use(
   basicAuth({
     authorizer: dbAuthorizer, //custom authorizer fn
     authorizeAsync: true, //allow our authorizer to be async
-    unauthorizedResponse: () => "You are not a Wizard!",
+    unauthorizedResponse: (req, res) => "You are not a Wizard!",
   })
 );
 
